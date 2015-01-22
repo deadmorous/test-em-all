@@ -29,7 +29,7 @@ Tasks should be in file ```task-data.txt``` (see ```task-data-example.txt```). T
 
 * Install node.js and npm
 * ```npm install```
-* [http://mathjax.readthedocs.org/en/latest/installation.html](Download MathJax) (I used version 2.4),
+* [Download MathJax](http://mathjax.readthedocs.org/en/latest/installation.html) (I used version 2.4),
   unzip, and put into the ```public/``` dubdir, so that the file ```MathJax.js``` has the path ```public/MathJax/MathJax.js```
 
 ## Starting server
