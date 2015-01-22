@@ -1,0 +1,124 @@
+//-
+    test-em-all - a tool for online examination of students.
+    Copyright (C) 2015 Stepan Orlov
+
+    This file is part of test-em-all.
+
+    Full text of copyright notice can be found in file copyright_notice.txt in the test-em-all root directory.
+    License agreement can be found in file LICENSE.md in the test-em-all root directory.
+
+- var ids = studentsData.ids()
+- var student
+
+html
+    head
+        title Страница экзаменатора
+        script(type='text/javascript' src='/js-3rd/jquery-1.11.2.min.js')
+        script(type='text/javascript' src='/js/messages.js')
+        link(rel='stylesheet' type='text/css' href='/css/common.css')
+        link(rel='stylesheet' type='text/css' href='/css/messages.css')
+        link(rel='stylesheet' type='text/css' href='/css/su.css')
+        script.
+            $(document).ready(function() {
+                // Alternating table rows
+                $('table').each(function() {
+                    var rows = $(this).find('tr')
+                    rows.filter(':odd').addClass('tr-odd')
+                    rows.filter(':even').addClass('tr-even')
+                    })
+
+                var reload = location.reload.bind(location)
+
+                // Process control links and file loading
+                $('#loadfiles a, #control a.control').click(function(e) {
+                    e.preventDefault()
+                    $.get(this.href).done(reload).fail(msg.ajaxError)
+                })
+
+                // Input processing for student assessment
+                $('#students input').click(function() {
+                    var checked = $(this).prop('checked')
+                    var m = this.id.match(/^(.*)\|([^\|]+)$/)
+                    $.post('/su/update-student', {data: JSON.stringify({id: m[1], field: m[2], value: checked})})
+                        .done(reload)
+                        .fail(msg.ajaxError)
+                })
+
+                // Process the 'save' button
+                $('#save').click(function(e) {
+                    e.preventDefault()
+                    $.post('/su/save', { nameEnding: $('#nameEnding').val() })
+                        .done(reload)
+                        .fail(msg.ajaxError)
+                })
+
+                $('#denyIdentification').click(function() {
+                    var checked = $(this).prop('checked')
+                    $.post('/su/deny-identification', {value: checked})
+                        .fail(msg.ajaxError)
+                })
+            })
+    body
+        #hdr
+            h1 Страница экзаменатора
+        #control
+            h2 Управление
+            .nested
+                u(style='list-style-type: none;')
+                    li: a(href='/su/exit') Выход
+                    li: a.control(href='/su/clear') Очистить данные
+            .nested
+                h3 Сохранение данных<br>
+                .nested
+                    form
+                        span.label окончание имени
+                        input#nameEnding(type='text' name='nameEnding' value=nameEnding)
+                        br
+                        input#save(type='submit' value='Сохранить')
+                h3 Загрузка данных
+                .nested#loadfiles
+                    table
+                        tr
+                            th имя
+                        each file in files
+                            tr
+                                td: a(href='/su/load?file='+file)= file
+                h3 Разное
+                .nested#misc
+                    span
+                        if studentsData.denyIdentification
+                            input#denyIdentification(type='checkbox' checked)
+                        else
+                            input#denyIdentification(type='checkbox')
+                        | Запретить идентификацию вновь прибывших
+        #students
+            h2 Состояние
+            if ids.length == 0
+                p Пока никто не зарегистрировался
+            else
+                mixin studentList(examFinished)
+                    table
+                        tr
+                            th Имя
+                            th Фамилия
+                            th № группы
+                            th Состояние
+                            th Оценка
+                            th: img(src='/menu.png')
+                        each id in ids
+                            - student = studentsData.byid(id)
+                            if examFinished? student.examFinished: !student.examFinished
+                                tr
+                                    td= student.firstname
+                                    td= student.lastname
+                                    td= student.group
+                                    td!= student.summary()
+                                    td= student.mark()
+                                    td
+                                        if studentsData.canTrash(id)
+                                            a(href='/su/trash?student='+id)
+                                                img(src='/trash.png')
+                h3 Сейчас сдают экзамен
+                +studentList(false)
+                h3 Уже ушли
+                +studentList(true)

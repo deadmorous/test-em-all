@@ -1,0 +1,62 @@
+//-
+    test-em-all - a tool for online examination of students.
+    Copyright (C) 2015 Stepan Orlov
+
+    This file is part of test-em-all.
+
+    Full text of copyright notice can be found in file copyright_notice.txt in the test-em-all root directory.
+    License agreement can be found in file LICENSE.md in the test-em-all root directory.
+
+- var unanswered = [], unansweredSingle = [], unansweredMulti = []
+- _.each(student.test.questions, function(q, i) {
+-     if (!q.isProcessed()) {
+-         unanswered.push(i+1)
+-         (q.multipleAnswers? unansweredMulti: unansweredSingle).push(i+1)
+-     }
+- })
+html
+    head
+        title Сдать тест
+        script(type='text/javascript' src='/js-3rd/jquery-1.11.2.min.js')
+        link(rel='stylesheet' type='text/css' href='/css/common.css')
+        script.
+            $(document).ready(function() {
+                $('#yes').click(function() {
+                    location.replace(location.origin + '/test/finish?sure=yes')
+                })
+                $('#no').click(function() {
+                    location.replace(location.origin + '/test')
+                })
+                $('#abandon').click(function() {
+                    location.replace(location.origin + '/test/abandon')
+                })
+            })
+    body
+        div#student Студент #{student.firstname} #{student.lastname}, группа #{student.group}
+        h1 Вы уверены, что уже хотите сдать тест?
+        if unanswered.length > 0
+            p Вы ничего не ответили на некоторые вопросы.
+            if unansweredMulti.length == 0
+                | На все эти вопросы (#{unansweredSingle.join(', ')}) надо что-то ответить.
+            else if unansweredSingle.length == 0
+                | Может быть, так и надо? Правильным ответом может быть комбинация, в которой не выбран ни один из вариантов!
+            else
+                | На часть этих вопросов (#{unansweredSingle.join(', ')}) надо что-то ответить.
+                | На другую часть (#{unansweredMulti.join(', ')}) может быть и не надо ничего отвечать, так как
+                | правильным ответом может быть комбинация, в которой не выбран ни один из вариантов.
+            if !timeleft
+                p Но времени исправлять что-либо уже не осталось.
+        p
+            if timeleft && unansweredSingle.length > 0
+                input(type='button' value='Всё правильно. Сдаю!' id='yes' disabled)
+            else if timeleft
+                input(type='button' value='Всё правильно. Сдаю!' id='yes')
+            else
+                input(type='button' value='Сдаю. А куда деваться-то?' id='yes')
+        p
+            if timeleft
+                input(type='button' value='Я поработаю над тестом ещё немного' id='no')
+            else
+                input(type='button' value='Я поработаю над тестом ещё немного' id='no' disabled)
+        if !timeleft
+            input(type='button' value='Я лучше приду в другой раз' id='abandon')

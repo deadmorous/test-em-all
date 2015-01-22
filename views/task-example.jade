@@ -1,0 +1,37 @@
+//-
+    test-em-all - a tool for online examination of students.
+    Copyright (C) 2015 Stepan Orlov
+
+    This file is part of test-em-all.
+
+    Full text of copyright notice can be found in file copyright_notice.txt in the test-em-all root directory.
+    License agreement can be found in file LICENSE.md in the test-em-all root directory.
+
+html
+    head
+        title Task example
+        script(type='text/javascript' src='/js-3rd/jquery-1.11.2.min.js')
+        script(type='text/javascript' src='/js/messages.js')
+        //- script(type='text/javascript' src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML')
+        script(type='text/javascript' src='/MathJax/MathJax.js')
+        link(rel='stylesheet' type='text/css' href='/css/common.css')
+        link(rel='stylesheet' type='text/css' href='/css/messages.css')
+        link(rel='stylesheet' type='text/css' href='/css/task.css')
+        script.
+            // Initialize MathJax
+            MathJax.Hub.Config({
+                elements: ['task-text'],
+                extensions: ["tex2jax.js"],
+                jax: ["input/TeX","output/HTML-CSS"],
+                tex2jax: {
+                    inlineMath: [['$','$']],
+                    processEscapes: true
+                }
+            })
+
+    body
+        h1 Список задач
+        div#task-text
+            each task in tasks
+                p!= task.text
+                hr

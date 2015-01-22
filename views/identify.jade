@@ -1,0 +1,34 @@
+//-
+    test-em-all - a tool for online examination of students.
+    Copyright (C) 2015 Stepan Orlov
+
+    This file is part of test-em-all.
+
+    Full text of copyright notice can be found in file copyright_notice.txt in the test-em-all root directory.
+    License agreement can be found in file LICENSE.md in the test-em-all root directory.
+
+- identificationData = identificationData || {}
+html
+    head
+        title Идентификация
+        script(type='text/javascript' src='js-3rd/jquery-1.11.2.min.js')
+        link(rel='stylesheet' type='text/css' href='/css/common.css')
+    body
+        h1 Идентификация
+        p Введите, пожалуйста, свои данные
+        if message && message.length > 0
+            p(style="color: #c00;")!= message.join('<br/>')
+        form(action='identify' method='POST')
+            | Имя
+            br
+            input(type='text' name='firstname' value=identificationData.firstname autofocus)
+            br
+            | Фамилия
+            br
+            input(type='text' name='lastname' value=identificationData.lastname)
+            br
+            | Номер группы
+            br
+            input(type='text' name='group'  value=identificationData.group)
+            br
+            input(type='submit' value='Ok')

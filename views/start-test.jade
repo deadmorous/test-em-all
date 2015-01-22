@@ -1,0 +1,63 @@
+//-
+    test-em-all - a tool for online examination of students.
+    Copyright (C) 2015 Stepan Orlov
+
+    This file is part of test-em-all.
+
+    Full text of copyright notice can be found in file copyright_notice.txt in the test-em-all root directory.
+    License agreement can be found in file LICENSE.md in the test-em-all root directory.
+
+html
+    head
+        title Начинаем тест
+        script(type='text/javascript' src='/js-3rd/jquery-1.11.2.min.js')
+        link(rel='stylesheet' type='text/css' href='/css/common.css')
+        script.
+            $(document).ready(function() {
+                $('#start').click(function() {
+                    location.replace(location.origin + '/test')
+                })
+                .focus()
+            })
+    body
+        div#student Студент #{student.firstname} #{student.lastname}, группа #{student.group}
+        h1 Начинаем тест
+        p.
+            Вам будет предложено 20 вопросов, на которые нужно ответить за 15 минут.
+            Если Вы не знаете ответ на какой-нибудь вопрос, переходите к следующему; в любой момент можно перейти к любому вопросу.
+        p Правильный ответ на вопрос &mdash; либо один из предложенных вариантов, либо комбинация предложенных вариантов. Следите за тем, какого типа маркеры!
+        p Пример 1 (один вариант).
+          br
+          | Сколько звёзд на небе?
+          br
+          input(type='radio' name='example' value='Одна')
+          | Одна
+          br
+          input(type='radio' name='example'  value='Много')
+          | Много
+        p Пример 2 (комбинация вариантов).
+          br
+          | Где живут тигры?
+          br
+          input(type='checkbox' value='В Азии')
+          | В Азии
+          br
+          input(type='checkbox' value='В зоопарках')
+          | В зоопарках
+          br
+          input(type='checkbox' value='На Луне')
+          | На Луне
+        p.
+            По истечении 15 минут тест заканчивается автоматически. Вы можете решить, сдавать его или нет.
+            В правом верхнем углу окна Вы сможете увидеть, сколько времени осталось до окончания теста.
+        p Для навигации можно пользоваться клавишами:
+            ul(style='list-style-type: none;')
+                li A или стрелка влево &mdash; к предыдущему вопросу;<br/>
+                li D или стрелка вправо или Enter &mdash; к следующему вопросу;<br/>
+                li W или стрелка вверх &mdash; к предыдущему варианту ответа;<br/>
+                li S или стрелка вниз &mdash; к следующему варианту ответа;<br/>
+                li Пробел &mdash; выбрать текущий вариант ответа.<br/>
+
+        | Но можно всё делать и мышкой.
+        p
+        input(type='button' value='Погнали!' id='start')

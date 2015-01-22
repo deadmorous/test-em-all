@@ -1,0 +1,32 @@
+//-
+    test-em-all - a tool for online examination of students.
+    Copyright (C) 2015 Stepan Orlov
+
+    This file is part of test-em-all.
+
+    Full text of copyright notice can be found in file copyright_notice.txt in the test-em-all root directory.
+    License agreement can be found in file LICENSE.md in the test-em-all root directory.
+
+html
+    head
+        title Выход из системы
+        script(type='text/javascript' src='/js-3rd/jquery-1.11.2.min.js')
+        link(rel='stylesheet' type='text/css' href='/css/common.css')
+        script.
+            $(document).ready(function() {
+                $('#exit').click(function() {
+                    location.replace(location.origin + '/exit?sure=yes')
+                })
+                $('#stay').click(function() {
+                    location.replace(location.origin)
+                })
+            })
+    body
+        h1 Выход из системы
+        p.
+            Вы уверены? Под Вашим именем сегодня уже нельзя будет войти, нельзя будет сдать тест ещё раз!
+        if (student && student.test && !student.test.finished && !student.test.abandoned)
+            p.important.
+                Ваш тест не сдан! Вернитесь к нему и выберите пункт меню 'Сдать тест', если хотите его сдать.
+        input#exit(type='button' value='Да, я ухожу')
+        input#stay(type='button' value='Остаюсь')

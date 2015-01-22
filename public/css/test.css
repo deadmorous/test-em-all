@@ -1,0 +1,183 @@
+/*
+test-em-all - a tool for online examination of students.
+Copyright (C) 2015 Stepan Orlov
+
+This file is part of test-em-all.
+
+Full text of copyright notice can be found in file copyright_notice.txt in the test-em-all root directory.
+License agreement can be found in file LICENSE.md in the test-em-all root directory.
+*/
+
+#student {
+    position: absolute;
+    height: 30px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    /*
+    background-color: #ccf;
+    */
+    padding: 10px;
+    font-size: 20px;
+}
+
+#student > span {
+    margin: 0px 50px 0px 20px;
+}
+
+span.startTime {
+    font-size: 70%;
+}
+
+.linkspan {
+    cursor: pointer;
+    color: #888;
+}
+.linkspan:hover {
+    color: black;
+}
+
+.linkspan-stressed {
+    cursor: pointer;
+    color: #c00;
+}
+.linkspan-stressed:hover {
+    color: #f00;
+}
+
+#test {
+    position: absolute;
+    top: 50px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+#test-main {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 150px;
+    right: 150px;
+    /*
+    background-color: #cfc;
+    */
+}
+
+#test-questions {
+    /*
+    background-color: #ffc;
+    */
+}
+
+.test-question-tab {
+    padding: 8px 15px;
+    background-color: white;
+    display: inline-block;
+    font-size: 20px;
+    border-radius: 3px;
+    margin: 2px;
+    box-shadow: 1px 1px 5px #888;
+}
+
+.test-question-tab-processed {
+    background-color: #ddd;
+}
+
+.test-question-tab-correct {
+    background-color: #96eda4;
+}
+
+.test-question-tab-incorrect {
+    background-color: #f8bcbc;
+}
+
+.test-question-tab-current {
+    color: black;
+    font-weight: bold;
+}
+
+.test-question-tab-other {
+    color: #888;
+    cursor: pointer;
+}
+
+.test-question-tab-other:hover {
+    color: #66f;
+}
+
+.test-question-tab-personal {
+    background-image: url('rolling-stones.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    color: rgba(0,0,0,0);
+}
+.test-question-tab-personal:hover {
+    color: rgba(0,0,0,0);
+}
+
+.answer-correct {
+    color: #0a0;
+}
+
+.answer-incorrect {
+    color: #a00;
+}
+
+#test-question {
+    padding: 10px;
+    /*
+    background-color: #fcf;
+    */
+}
+
+#test-back {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    width: 150px;
+    background: #fff url('test-back-dimmed.png') no-repeat fixed 50px center;
+    cursor: pointer;
+}
+
+#test-back-hovered {
+    position: absolute;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: #fff url('test-back.png') no-repeat fixed 50px center;
+    pointer-events: none;
+}
+
+#test-forth-hovered {
+    position: absolute;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: #fff url('test-forth.png') no-repeat fixed right 50px center;
+    pointer-events: none;
+}
+
+#test-forth {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    width: 150px;
+    background: #fff url('test-forth-dimmed.png') no-repeat fixed right 50px center;
+    cursor: pointer;
+}
+
+code {
+    font-size: 135%;
+}
+
+input:focus {
+    outline: 2px dotted #ccc;
+}
+
+.summary {
+    font-size: 30px;
+    color: #03b;
+}

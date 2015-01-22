@@ -1,0 +1,212 @@
+//-
+    test-em-all - a tool for online examination of students.
+    Copyright (C) 2015 Stepan Orlov
+
+    This file is part of test-em-all.
+
+    Full text of copyright notice can be found in file copyright_notice.txt in the test-em-all root directory.
+    License agreement can be found in file LICENSE.md in the test-em-all root directory.
+
+- var qidx = +req.query.qidx || 0
+- var fitstq = qidx == 0,   lastq = qidx == student.test.questions.length-1
+- var q = student.test.questions[qidx] || {}
+- var qtype = q.multipleAnswers? 'checkbox': 'radio'
+- var classes
+
+html
+    head
+        title Тест
+        script(type='text/javascript' src='/js-3rd/jquery-1.11.2.min.js')
+        script(type='text/javascript' src='/js/messages.js')
+        link(rel='stylesheet' type='text/css' href='/css/common.css')
+        link(rel='stylesheet' type='text/css' href='/css/test.css')
+        link(rel='stylesheet' type='text/css' href='/css/messages.css')
+        script.
+            // Found at http://www.developerdrive.com/2013/08/turning-the-querystring-into-a-json-object-using-javascript/
+            function parseQueryString() {
+                var pairs = location.search.slice(1).split('&')
+                var result = {}
+                pairs.forEach(function(pair) {
+                    pair = pair.split('=')
+                    result[pair[0]] = decodeURIComponent(pair[1] || '')
+                })
+                return JSON.parse(JSON.stringify(result))
+            }
+
+            (function() {
+                var qidx = #{qidx}, nq = #{student.test.questions.length}
+
+                var ajaxError = msg.ajaxError
+
+                $(document).ready(function() {
+                    $('#test-back,#test-forth').hover(
+                        function() {
+                            $(this).children().fadeIn('fast')
+                        },
+                        function() {
+                            $(this).children().fadeOut('fast')
+                        }
+                    )
+                    function gotoquestion(arg) {
+                        if (arg >= 0   &&   arg < nq) {
+                            var qs = parseQueryString()
+                            qs.qidx = arg
+                            location.search = '?' + $.param(qs)
+                        }
+                    }
+                    $('#test-back').click(gotoquestion.bind(null,qidx-1))
+                    $('#test-forth').click(gotoquestion.bind(null,qidx+1))
+                    $('.test-question-tab-other').click(function() {
+                        gotoquestion($(this).text()-1)
+                    })
+                    var qinputs = $('#test-question input')
+                    qinputs.click(function() {
+                        var v = []
+                        qinputs.each(function() {
+                            var x = $(this), d = {}
+                            v[x.val()] = x.prop('checked')
+                        })
+                        $.post('/test/update', { data: JSON.stringify({qidx: qidx, answers: v}) })
+                            .done(function() {
+                                $('.test-question-tab:nth-child('+(qidx+2)+')').addClass('test-question-tab-processed')
+                            })
+                            .fail(ajaxError)
+                    })
+                    function navigator(path) {
+                        return function() {
+                            location.href = location.origin + path
+                        }
+                    }
+                    $('#back').click(navigator('#{backref}'))
+                    $('#finish').click(navigator('/test/finish'))
+                    $('#exit').click(navigator('/exit'))
+                    if (#{student.test.finished})
+                        $('#test-question input').prop('disabled', true)
+                    else {
+                        // Keyboard navigation
+                        $('#test-question input').keydown(function(e) {
+                            var radio = this.type === 'radio',   k = e.keyCode,   next
+                            switch(k) {
+                                case 87: case 38:   // up
+                                    if (radio && k == 38)
+                                        return
+                                    next = $(this).parent().prev().prev().children('input')
+                                    break
+                                case 83: case 40:       // down
+                                    if (radio && k == 40)
+                                        return
+                                    next = $(this).parent().next().next().children('input')
+                                    break
+                                case 65: case 37:       // left
+                                    $('#test-back').click()
+                                    break
+                                case 68: case 39:       // right
+                                case 13:                // enter
+                                    $('#test-forth').click()
+                                    break
+                                case 32:
+                                    if (!radio)
+                                        return
+                                    next = $(this)
+                                    break
+                                default:
+                                    return
+                            }
+                            if (next) {
+                                next.focus()
+                                if (radio)
+                                    next[0].click()
+                                }
+                            e.preventDefault()
+                        })
+                        $('#test-question input:first').focus()
+                        function updateTimeLeft() {
+                            $.get('/test/timeleft')
+                                .done(function(data) {
+                                    var timeleft = $('.timeleft')
+                                    timeleft.text(data)
+                                    if (!data.match(/\d+:\d+/)) {
+                                        timeleft.prev().text('')
+                                        $('#finish').removeClass('linkspan').addClass('linkspan-stressed')
+                                        if (updateTimeLeftHandle) {
+                                            clearInterval(updateTimeLeftHandle)
+                                            updateTimeLeftHandle = undefined
+                                        }
+                                    }
+                                })
+                                .fail(ajaxError)
+                        }
+                        var updateTimeLeftHandle = setInterval(updateTimeLeft, 10000)
+                        updateTimeLeft()
+                    }
+                })
+            })()
+    body
+        #student
+            span Студент #{student.firstname} #{student.lastname}, группа #{student.group}
+            unless backref
+                span.linkspan#exit(style='float: right') Выйти
+            if student.test.finished
+                if backref
+                    span.linkspan#back(style='float: right') Назад
+                else if !allFinished
+                    span(style='float: right')
+                        span Результат будет через &nbsp;
+                        span#timeTillAllFinish #{timeTillAllFinishFmt}
+                    script.
+                        setInterval(
+                            function() {
+                                $.get('/test/timeTillAllFinish')
+                                    .done(function(data) {
+                                        if (data)
+                                            $('#timeTillAllFinish').text(data)
+                                        else
+                                            location.reload()
+                                    })
+                                    .fail(ajaxError)
+                            },
+                            10000
+                        )
+            else
+                span(style='float: right')
+                    span Осталось времени &nbsp;
+                    span.timeleft
+                span.linkspan#finish(style='float: right') Сдать тест
+            if suview && student.test.startTime
+                span.startTime(style='float: right') Начат #{(new Date(student.test.startTime)).toString()}
+        #test
+            #test-main
+                #test-questions
+                    .test-question-tab Вопросы
+                    each question, index in student.test.questions
+                        - classes = ['test-question-tab']
+                        if allFinished && student.test.finished
+                            - classes.push('test-question-tab-' + (question.isCorrect()? 'correct': 'incorrect'))
+                            - if (question.person)   classes.push('test-question-tab-personal')
+                        else
+                            - if (question.isProcessed())   classes.push('test-question-tab-processed')
+                        - classes.push('test-question-tab-' + (index == qidx? 'current': 'other'))
+                        div(class=classes.join(' '))!= index+1
+                #test-question
+                    p!= q.text
+                    p
+                        each answer, index in q.answers
+                            - classes = []
+                            if allFinished && student.test.finished
+                                - if(answer.correct)   classes.push('answer-correct')
+                                - else if(answer.studentsAnswer)   classes.push('answer-incorrect')
+                            span(class=classes.join(' '))
+                                if answer.studentsAnswer
+                                    input(type=qtype name='answer' value=index checked)
+                                else
+                                    input(type=qtype name='answer' value=index)
+                                != answer.text
+                            br
+                if summary
+                    div.summary!= summary
+            #test-back
+                if !fitstq
+                    #test-back-hovered
+            #test-forth
+                if !lastq
+                    #test-forth-hovered

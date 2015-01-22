@@ -1,0 +1,20 @@
+{
+  "name": "test-em-all",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node test-em-all.js"
+  },
+  "dependencies": {
+    "express": "4.11.0",
+    "express-session": "*",
+    "express-favicon": "*",
+    "express-flash": "*",
+    "body-parser": "*",
+    "morgan": "*",
+    "method-override": "*",
+    "cookie-parser": "*",
+    "jade": "*",
+    "lodash": "*"
+  }
+}

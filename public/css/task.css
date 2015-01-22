@@ -1,0 +1,44 @@
+/*
+test-em-all - a tool for online examination of students.
+Copyright (C) 2015 Stepan Orlov
+
+This file is part of test-em-all.
+
+Full text of copyright notice can be found in file copyright_notice.txt in the test-em-all root directory.
+License agreement can be found in file LICENSE.md in the test-em-all root directory.
+*/
+
+#student {
+    position: absolute;
+    height: 30px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    /*
+    background-color: #ccf;
+    */
+    padding: 10px;
+    font-size: 20px;
+}
+
+#main {
+    position: absolute;
+    top: 30px;
+    padding: 0px 15%;
+}
+
+#student > span {
+    margin: 0px 50px 0px 20px;
+}
+
+.linkspan {
+    cursor: pointer;
+    color: #888;
+}
+.linkspan:hover {
+    color: black;
+}
+
+#task-text {
+    font-size: 150%;
+}

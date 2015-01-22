@@ -1,0 +1,20 @@
+//-
+    test-em-all - a tool for online examination of students.
+    Copyright (C) 2015 Stepan Orlov
+
+    This file is part of test-em-all.
+
+    Full text of copyright notice can be found in file copyright_notice.txt in the test-em-all root directory.
+    License agreement can be found in file LICENSE.md in the test-em-all root directory.
+
+html
+    head
+        title Авторизация экзаменатора
+        link(rel='stylesheet' type='text/css' href='/css/common.css')
+    body
+        h1 Авторизация экзаменатора
+        p Введите пароль
+        if message && message.length > 0
+            p(style="color: #c00;")!= message.join('<br/>')
+        form(action='auth' method='POST')
+            input(type='password' name='pass' autofocus)

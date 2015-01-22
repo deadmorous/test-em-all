@@ -1,0 +1,27 @@
++ Test result summary
++ Hotkeys (aswd space arrows enter backspace)
+Examinator's (su) page
++  test start time
++  test actual duration
++  Task spec (checkable)
++  in-term test status (checkable)
++  serialization
++  manually disable item (to let student try again)
+  local time in file names
++  save name ending in global data
++  mark put checkbox
+  allow new session for existing student (button)
+  filter
++  students gone are shown last
++  deny new user identification
++ Time refresh when waiting for test results
++ colors
++ additional personal joke questions
++ remove some doubtful questions
++ nosort option for question answers
++ clarify some questions
+sandbox for training
++ student logout
++ fix <> in formulas
+indicate each question type in test
+
